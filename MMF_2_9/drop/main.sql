@@ -1,23 +1,13 @@
---install
---this file is main to drop schema
---this file must be run under system user
--- 1 - username
--- example of run @main dima
-DEFINE USERNAME = &&1;
+SET TIMING ON
+SPOOL DROP_FILE.LOG
 
-SET VERIFY OFF;
-SPOOL DELETE.LOG;
+DEFINE USER_NAME = &&1
 
-PROMPT Script info:
-select sys_context('USERENV','MODULE') from dual;
+PROMPT 'run drop_schema with param user_name = &&USER_NAME'
+@drop_schema.sql &&USER_NAME
 
+PROMPT 'run drop_tablespace.sql with param user_name = &&USER_NAME'
+@drop_tablespace.sql &&USER_NAME
 
-
-PROMPT drop_tablespace launched with params &&USERNAME._TABLESPACE
-@drop_tablespace &&USERNAME._TABLESPACE
-
-PROMPT drop_schema launched with params &&USERNAME
-@drop_schema &&USERNAME
-
+UNDEFINE USER_NAME
 SPOOL OFF
-UNDEFINE 

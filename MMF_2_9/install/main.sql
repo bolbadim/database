@@ -1,29 +1,28 @@
---install
---this file is main to creat schema
---this file must be run under system user
--- 1 - username
--- 2 - location
--- example of run @main dima C:\oracle\oradata\ORCL\tablespaces
-DEFINE USERNAME = &&1;
-DEFINE LOCATION = &&2;
+SET TIMING ON
+SPOOL INSTALL_FILE.LOG
 
-SET VERIFY OFF;
-SPOOL INSTALL.LOG;
+DEFINE USER_NAME = &&1
+-- MMF_2_9
+DEFINE TBS_LOCATION = &&2
+--C:\oracle\oradata\ORCL
 
-PROMPT Script info:
-select sys_context('USERENV','MODULE') from dual;
+PROMPT  "execute create_tablespace.sql for data tablespace"
+PROMPT  "user_name = &&USER_NAME"
+PROMPT  "file location = &&TBS_LOCATION"
+
+@create_tablespace.sql &&USER_NAME &&TBS_LOCATION DATA
+
+PROMPT  "execute create_tablespace.sql for index tablespace"
+PROMPT  "user_name = &&USER_NAME"
+PROMPT  "file location = &&TBS_LOCATION"
+
+@create_tablespace.sql &&USER_NAME &&TBS_LOCATION IDX
+
+@create_schema.sql &&USER_NAME
+
+@privilege_schema.sql &&USER_NAME
 
 
-
-PROMPT create_tablespaces.sql was runned with params &&USERNAME._TABLESPACE &&LOCATION &&USERNAME._IND &&LOCATION
-@create_tablespaces &&USERNAME._TABLESPACE &&LOCATION &&USERNAME._IND &&LOCATION
-
-PROMPT create_user.sql runned with params&&USERNAME &&USERNAME._PASS 
-@create_user &&USERNAME &&USERNAME._PASS
-
-PROMPT install/privilege_schema.sql runned with &&USERNAME
-@privilege_schema &&USERNAME
-
+UNDEFINE USER_NAME
+UNDEFINE TBS_LOCATION
 SPOOL OFF
-UNDEFINE USERNAME
-UNDEFINE LOCATION

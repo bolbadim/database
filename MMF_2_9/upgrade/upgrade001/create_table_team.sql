@@ -1,0 +1,9 @@
+CREATE TABLE TEAM (
+    ID NUMBER GENERATED ALWAYS AS IDENTITY INCREMENT BY 1 START WITH 1 MINVALUE 1 NOT NULL,
+    PROJECT_ID NUMBER,
+    LEAD_ID NUMBER
+);
+
+COMMENT ON COLUMN TEAM.ID IS 'Unique value, serves as the primary key';
+COMMENT ON COLUMN TEAM.PROJECT_ID IS 'Current project that team performs';
+COMMENT ON COLUMN TEAM.LEAD_ID IS 'Id of employee that leads a team';
